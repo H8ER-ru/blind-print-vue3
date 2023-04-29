@@ -1,0 +1,21 @@
+:root {
+  --base-text-color: #151515;
+  --base-error-color: #ff0000;
+  --base-success-color: #00ff00;
+  --base-border-color: #000000;
+  --base-background-color: #55c5ff;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  line-height: 1.5;
+  color: var(--base-text-color);
+}
