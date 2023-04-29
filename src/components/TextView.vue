@@ -10,6 +10,10 @@
     </div>
     <div v-else class="text-view__task">
       <p class="text-view__subtitle">Отсчет времени начнется после ввода первого символа</p>
+      <div class="text-view__statistic">
+        <p>Скорость печати: {{printSpeed}}</p>
+        <p>Точность: {{accuracy}}</p>
+      </div>
       <div class="text-view__wrapper">
         <span
           v-for="(word, wordIndex) in dividedText"
@@ -33,6 +37,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue"
 import { useNotification } from "@kyvg/vue3-notification"
 import AppButton from "@/components/appButton.vue"
 import { getTextByNumber, secondsWords, symbolsWords } from "@/utils/timeUtils"
+import { accuracyPercentCount, speedCount } from "@/utils/countUtils"
 
 const { notify } = useNotification()
 
@@ -50,8 +55,7 @@ const inputText = ref<string[]>([])
 const activeWordIndex = ref<number>(0)
 const wrongWord = ref<boolean>(false)
 const completeTime = ref<string>("")
-
-let mistakeCount: number = 0
+const mistakeCount = ref<number>(0)
 
 let timeStart: number = 0
 let timeEnd: number = 0
@@ -60,9 +64,17 @@ const dividedText = computed((): string[] => {
   return props.text.split("")
 })
 
-const symbolsLengthText = computed ((): string => {
+const symbolsLengthText = computed((): string => {
   const length = dividedText.value.length
   return `${length} ${getTextByNumber(length, symbolsWords)}`
+})
+
+const printSpeed = computed((): string => {
+  return speedCount(timeStart, activeWordIndex.value)
+})
+
+const accuracy = computed((): string => {
+  return accuracyPercentCount(mistakeCount.value, activeWordIndex.value)
 })
 
 const keyboardHandler = (event: KeyboardEvent): void => {
@@ -92,7 +104,7 @@ const inputHandler = (word: string): void => {
       taskEndHandler()
     }
   } else {
-    mistakeCount++
+    mistakeCount.value++
     wrongWord.value = true
   }
 }
@@ -130,6 +142,7 @@ onBeforeUnmount(() => {
   &__word
     padding: 1px
     transition: background-color .1s linear
+    border-radius: 5px
 
     &--current
         background: var(--base-success-color)

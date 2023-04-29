@@ -1,5 +1,5 @@
 <template>
-  <button @click="clickHandler" class="app-button">
+  <button @click="clickHandler" role="button" class="app-button">
     {{ text }}
     <SpinnerLoader v-if="loading" />
   </button>
